@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE & KCET Quiz Hub</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --text-light: #64748b;
+            --success: #22c55e;
+            --error: #ef4444;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--surface);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-back {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s;
+        }
+
+        .btn-back:hover {
+            color: var(--error);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .quiz-title-stuff {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .option-btn {
+            background-color: var(--surface);
+            color: var(--text);
+            border: 2px solid var(--border);
+            padding: 14px;
+            text-align: left;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .option-btn:not([disabled]):hover {
+            border-color: var(--primary);
+            background-color: #f8fafc;
+        }
+
+        .option-btn.correct {
+            background-color: #dcfce7 !important;
+            border-color: var(--success) !important;
+            color: #15803d;
+            font-weight: 600;
+        }
+
+        .option-btn.wrong {
+            background-color: #fee2e2 !important;
+            border-color: var(--error) !important;
+            color: #b91c1c;
+        }
+
+        .results-card {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="menu-screen" class="screen active">
+            <h1>Crack Entrance Hub</h1>
+            <p class="subtitle">Customized for 11th, 12th, JEE, and KCET preparation</p>
+            <div class="menu-grid">
+                <button class="btn" onclick="startQuiz('math')">Maths: Degree to Radian MCQ</button>
+                <button class="btn" onclick="startQuiz('physics')">Physics: Dimensional Formula MCQ</button>
+            </div>
+        </div>
+
+        <div id="quiz-screen" class="screen">
+            <div class="quiz-header">
+                <button class="btn-back" onclick="confirmAndGoHome()"> Exit to Menu</button>
+                <div class="quiz-title-stuff" style="text-align: right;">
+                    <div id="quiz-title" style="font-weight: 600; color: var(--text);">Quiz</div>
+                    <div id="progress-text">Question 1/10</div>
+                </div>
+            </div>
+            <div class="question-text" id="question-field">Question text goes here?</div>
+            <div class="options-grid" id="options-field">
+                </div>
+            <button class="btn" id="next-btn" style="display: none;" onclick="handleNextClick()">Next Question</button>
+        </div>
+
+        <div id="results-screen" class="screen">
+            <div class="results-card">
+                <h2>Quiz Completed!</h2>
+                <div class="score-display" id="final-score">0 / 10</div>
+                <p id="feedback-text" style="color: var(--text-light); margin-bottom: 25px;"></p>
+                <button class="btn" onclick="goHome()">Back to Main Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- PHYSICS DATA POOL ---
+        // Uses standard ASCII notations (M^1 L^1 T^-2) to preserve absolute encoding compatibility
+        const physicsPool = [
+            { dimensions: "M^1 L^1 T^-2", formulas: ["Force", "Thrust", "Weight", "Tension"] },
+            { dimensions: "M^1 L^2 T^-2", formulas: ["Work", "Energy", "Torque", "Kinetic Energy", "Potential Energy"] },
+            { dimensions: "M^1 L^-1 T^-2", formulas: ["Pressure", "Stress", "Young's Modulus", "Bulk Modulus", "Modulus of Rigidity"] },
+            { dimensions: "M^0 L^0 T^-1", formulas: ["Frequency", "Angular Velocity", "Velocity Gradient"] },
+            { dimensions: "M^1 L^2 T^-1", formulas: ["Angular Momentum", "Planck's Constant"] },
+            { dimensions: "M^0 L^1 T^-1", formulas: ["Velocity", "Speed"] },
+            { dimensions: "M^0 L^1 T^-2", formulas: ["Acceleration", "Acceleration due to gravity"] },
+            { dimensions: "M^1 L^-3 T^0", formulas: ["Density"] },
+            { dimensions: "M^1 L^1 T^-1", formulas: ["Linear Momentum", "Impulse"] },
+            { dimensions: "M^0 L^2 T^-2", formulas: ["Latent Heat", "Gravitational Potential"] },
+            { dimensions: "M^1 L^0 T^-2", formulas: ["Surface Tension", "Spring Constant"] },
+            { dimensions: "M^1 L^2 T^-2 K^-1", formulas: ["Boltzmann Constant", "Entropy"] }
+        ];
+
+        // --- GLOBAL STATE ---
+        let currentQuizType = ''; 
+        let currentQuestionIdx = 0;
+        let score = 0;
+        let currentCorrectAnswer = '';
+        let hasAnswered = false;
+        
+        let usedDegreesThisRound = [];
+        let physicsIndicesOrder = [];
+
+        // --- UTILITY FUNCTIONS ---
+        function changeScreen(screenId) {
+            var screens = document.querySelectorAll('.screen');
+            for (var i = 0; i < screens.length; i++) {
+                screens[i].classList.remove('active');
+            }
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                let temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+            return array;
+        }
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getGCD(a, b) {
+            return b === 0 ? a : getGCD(b, a % b);
+        }
+
+        function convertDegreeToRadianStr(deg) {
+            if (deg === 360) return "2pi";
+            if (deg === 180) return "pi";
+            if (deg === 0) return "0";
+
+            let num = deg;
+            let den = 180;
+            let gcd = getGCD(num, den);
+
+            num /= gcd;
+            den /= gcd;
+
+            let numStr = num === 1 ? "pi" : num + "pi";
+            return den === 1 ? numStr : numStr + "/" + den;
+        }
+
+        // --- QUIZ CONTROLLER ---
+        function startQuiz(type) {
+            currentQuizType = type;
+            currentQuestionIdx = 0;
+            score = 0;
+            usedDegreesThisRound = [];
+            
+            if (type === 'physics') {
+                physicsIndicesOrder = [];
+                for (let i = 0; i < physicsPool.length; i++) {
+                    physicsIndicesOrder.push(i);
+                }
+                shuffleArray(physicsIndicesOrder);
+            }
+            
+            document.getElementById('quiz-title').innerText = 
+                type === 'math' ? 'Maths: Degree to Radian' : 'Physics: Dimensions';
+            
+            changeScreen('quiz-screen');
+            generateQuestion();
+        }
+
+        function generateQuestion() {
+            hasAnswered = false;
+            document.getElementById('next-btn').style.display = 'none';
+            document.getElementById('progress-text').innerText = "Question " + (currentQuestionIdx + 1) + "/10";
+
+            let questionText = '';
+            let options = [];
+
+            if (currentQuizType === 'math') {
+                let targetDegree;
+                let attempts = 0;
+                do {
+                    targetDegree = getRandomInt(1, 360);
+                    attempts++;
+                } while (usedDegreesThisRound.includes(targetDegree) && attempts < 100);
+                
+                usedDegreesThisRound.push(targetDegree);
+
+                questionText = "Convert " + targetDegree + " degrees into radians:";
+                currentCorrectAnswer = convertDegreeToRadianStr(targetDegree);
+                options.push(currentCorrectAnswer);
+
+                while (options.length < 4) {
+                    let wrongDeg = getRandomInt(1, 360);
+                    let wrongRad = convertDegreeToRadianStr(wrongDeg);
+                    if (!options.includes(wrongRad)) {
+                        options.push(wrongRad);
+                    }
+                }
+            } else if (currentQuizType === 'physics') {
+                let correctSetIdx = physicsIndicesOrder[currentQuestionIdx];
+                let correctGroup = physicsPool[correctSetIdx];
+                
+                let formulaName = correctGroup.formulas[getRandomInt(0, correctGroup.formulas.length - 1)];
+                questionText = "What is the dimensional formula for [ " + formulaName + " ]?";
+                currentCorrectAnswer = correctGroup.dimensions;
+                options.push(currentCorrectAnswer);
+
+                let structuralPool = [];
+                for (let i = 0; i < physicsPool.length; i++) {
+                    if (i !== correctSetIdx) {
+                        structuralPool.push(physicsPool[i]);
+                    }
+                }
+                shuffleArray(structuralPool);
+
+                for (let i = 0; i < 3; i++) {
+                    options.push(structuralPool[i].dimensions);
+                }
+            }
+
+            shuffleArray(options);
+
+            document.getElementById('question-field').innerText = questionText;
+            const optionsField = document.getElementById('options-field');
+            optionsField.innerHTML = '';
+
+            options.forEach(function(opt) {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = function() { selectOption(btn, opt); };
+                optionsField.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedBtn, selectedValue) {
+            if (hasAnswered) return;
+            hasAnswered = true;
+
+            const allButtons = document.querySelectorAll('.option-btn');
+            allButtons.forEach(function(btn) {
+                btn.setAttribute('disabled', 'true');
+                if (btn.innerText === currentCorrectAnswer) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            if (selectedValue === currentCorrectAnswer) {
+                score++;
+            } else {
+                selectedBtn.classList.add('wrong');
+            }
+
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        function handleNextClick() {
+            currentQuestionIdx++;
+            if (currentQuestionIdx < 10) {
+                generateQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function confirmAndGoHome() {
+            if (confirm("Are you sure you want to quit this round? Your progress will be lost.")) {
+                goHome();
+            }
+        }
+
+        function showResults() {
+            changeScreen('results-screen');
+            document.getElementById('final-score').innerText = score + " / 10";
+            
+            let feedback = "";
+            if (score === 10) feedback = "Outstanding accuracy! Perfect target achieved.";
+            else if (score >= 8) feedback = "Excellent work! Keep maintaining this pace.";
+            else if (score >= 5) feedback = "Good effort, but continuous revision will polish performance.";
+            else feedback = "Focus on the core basics and re-attempt to solidify concept familiarity.";
+            
+            document.getElementById('feedback-text').innerText = feedback;
+        }
+
+        function goHome() {
+            changeScreen('menu-screen');
+        }
+    </script>
+</body>
+</html>
