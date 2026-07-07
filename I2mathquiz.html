@@ -190,12 +190,12 @@
 
     <div class="container">
         <div id="menu-screen" class="screen active">
-            <h1>Ultimate quiz</h1>
+            <h1>Ultimate Quiz</h1>
             <p class="subtitle">Customized for 11th, 12th, JEE, and KCET preparation</p>
             <div class="menu-grid">
                 <button class="btn" onclick="startQuiz('math')">Maths: Degree to Radian MCQ</button>
                 <button class="btn" onclick="startQuiz('physics')">Physics: Dimensional Formula MCQ</button>
-                <button class="btn" onclick="startQuiz('trig')">Maths: Trigonometry formula mcq</button>
+                <button class="btn" onclick="startQuiz('trig')">Maths: Trigonometry Formula MCQ</button>
             </div>
         </div>
 
@@ -208,8 +208,7 @@
                 </div>
             </div>
             <div class="question-text" id="question-field">Question text goes here?</div>
-            <div class="options-grid" id="options-field">
-                </div>
+            <div class="options-grid" id="options-field"></div>
             <button class="btn" id="next-btn" style="display: none;" onclick="handleNextClick()">Next Question</button>
         </div>
 
@@ -225,7 +224,6 @@
 
     <script>
         // --- PHYSICS DATA POOL ---
-        // Uses standard ASCII notations (M^1 L^1 T^-2) to preserve absolute encoding compatibility
         const physicsPool = [
             { dimensions: "M^1 L^1 T^-2", formulas: ["Force", "Thrust", "Weight", "Tension"] },
             { dimensions: "M^1 L^2 T^-2", formulas: ["Work", "Energy", "Torque", "Kinetic Energy", "Potential Energy"] },
@@ -240,34 +238,33 @@
             { dimensions: "M^1 L^0 T^-2", formulas: ["Surface Tension", "Spring Constant"] },
             { dimensions: "M^1 L^2 T^-2 K^-1", formulas: ["Boltzmann Constant", "Entropy"] },
             { dimensions: "M^0 L^2 T^0", formulas: ["Area" ] } ,
-            { dimensions: "M^0 L^0 T^0", formulas: ["strain", "angle, angular displacement", "trigonometric ratios",
-                                                    "efficiency", "luminous efficiency", "Q-factor of coil", "magnification" ] }
+            { dimensions: "M^0 L^0 T^0", formulas: ["strain", "angle, angular displacement", "trigonometric ratios", "efficiency", "luminous efficiency", "Q-factor of coil", "magnification" ] }
         ];
 
-        πππππ
-      // --- TRIG --- 
+        // --- TRIG --- 
         const trigPool = [
-      { expansion: "cos(x - y)", formulas: ["cos(x)cos(y) + sin(x)sin(y)"] },
-    { expansion: "cos(x + y)", formulas: ["cos(x)cos(y) - sin(x)sin(y)"] },
-     { expansion: "sin(x + y)", formulas: ["sin(x)cos(y) + cos(x)sin(y)"] },
-      { expansion: "sin(x - y)", formulas: ["sin(x)cos(y) - cos(x)sin(y)"] },
-    { expansion: "cos(π/2 - x)", formulas: ["sin(x)"] },
-    { expansion: "sin(π/2 - x)", formulas: ["cos(x)"] },
-     { expansion: "cos(π/2 + x)", formulas: ["-sin(x)"] },
-     { expansion: "sin(π/2 + x)", formulas: ["-cos(x)"] },
-    { expansion: "cos(π + x)", formulas: ["-cos(x)"] },
-    { expansion: "sin(π + x)", formulas: ["-sin(x)"] },
-    { expansion: "sin(2π - x)", formulas: ["-sin(x)"] },
-    { expansion: "sin(2π + x)", formulas: ["sin(x)"] },
-    { expansion: "cos(2π - x)", formulas: ["cos(x)"] },
-    { expansion: "cos(2π + x)", formulas: ["cos(x)"] },           
-    { expansion: "3 sin(x) - 4 sin^3(x)", formulas: ["sin(3x)"] },
-    { expansion: "4 cos^3(x) - 3 cos(x)", formulas: ["cos(3x)"] },
-    { expansion: "2 sin(x) cos(x)", formulas: ["sin(2x)"] },
-    { expansion: "cos^2(x) - sin^2(x)", formulas: ["cos(2x)"] },
-    { expansion: "3 tan(x) - tan^3(x) / (1 - 3 tan^2(x))", formulas: ["tan(3x)"] }
+            { expansion: "cos(x - y)", formulas: ["cos(x)cos(y) + sin(x)sin(y)"] },
+            { expansion: "cos(x + y)", formulas: ["cos(x)cos(y) - sin(x)sin(y)"] },
+            { expansion: "sin(x + y)", formulas: ["sin(x)cos(y) + cos(x)sin(y)"] },
+            { expansion: "sin(x - y)", formulas: ["sin(x)cos(y) - cos(x)sin(y)"] },
+            { expansion: "cos(π/2 - x)", formulas: ["sin(x)"] },
+            { expansion: "sin(π/2 - x)", formulas: ["cos(x)"] },
+            { expansion: "cos(π/2 + x)", formulas: ["-sin(x)"] },
+            { expansion: "sin(π/2 + x)", formulas: ["-cos(x)"] },
+            { expansion: "cos(π + x)", formulas: ["-cos(x)"] },
+            { expansion: "sin(π + x)", formulas: ["-sin(x)"] },
+            { expansion: "sin(2π - x)", formulas: ["-sin(x)"] },
+            { expansion: "sin(2π + x)", formulas: ["sin(x)"] },
+            { expansion: "cos(2π - x)", formulas: ["cos(x)"] },
+            { expansion: "cos(2π + x)", formulas: ["cos(x)"] },            
+            { expansion: "3 sin(x) - 4 sin^3(x)", formulas: ["sin(3x)"] },
+            { expansion: "4 cos^3(x) - 3 cos(x)", formulas: ["cos(3x)"] },
+            { expansion: "2 sin(x) cos(x)", formulas: ["sin(2x)"] },
+            { expansion: "cos^2(x) - sin^2(x)", formulas: ["cos(2x)"] },
+            { expansion: "3 tan(x) - tan^3(x) / (1 - 3 tan^2(x))", formulas: ["tan(3x)"] }
+        ];
+
         // --- GLOBAL STATE ---
-            
         let currentQuizType = ''; 
         let currentQuestionIdx = 0;
         let score = 0;
@@ -334,32 +331,24 @@
                     physicsIndicesOrder.push(i);
                 }
                 shuffleArray(physicsIndicesOrder);
-            }   else if (type === 'trig') {
-        // Add this new block for trig shuffling
-        trigIndicesOrder = [];
-        for (let i = 0; i < trigPool.length; i++) {
-            trigIndicesOrder.push(i);
+            } else if (type === 'trig') {
+                trigIndicesOrder = [];
+                for (let i = 0; i < trigPool.length; i++) {
+                    trigIndicesOrder.push(i);
+                }
+                shuffleArray(trigIndicesOrder);
+            }
+    
+            let titleText = '';
+            if (type === 'math') titleText = 'Maths: Degree to Radian';
+            else if (type === 'physics') titleText = 'Physics: Dimensions';
+            else if (type === 'trig') titleText = 'Maths: Trigonometry Formulas';
+            
+            document.getElementById('quiz-title').innerText = titleText;
+            
+            changeScreen('quiz-screen');
+            generateQuestion();
         }
-        shuffleArray(trigIndicesOrder);
-    }
-    
-
-
-
-
-
-
-  let titleText = '';
-    if (type === 'math') titleText = 'Maths: Degree to Radian';
-    else if (type === 'physics') titleText = 'Physics: Dimensions';
-    else if (type === 'trig') titleText = 'Maths: Trigonometry Formulas';
-    
-    document.getElementById('quiz-title').innerText = titleText;
-    
-    changeScreen('quiz-screen');
-    generateQuestion();
-}
-
 
         function generateQuestion() {
             hasAnswered = false;
@@ -410,29 +399,26 @@
                 for (let i = 0; i < 3; i++) {
                     options.push(structuralPool[i].dimensions);
                 }
-                } else if (currentQuizType === 'trig') {
-    let correctSetIdx = trigIndicesOrder[currentQuestionIdx];
-    let correctGroup = trigPool[correctSetIdx];
-    
-    let formulaName = correctGroup.formulas[getRandomInt(0, correctGroup.formulas.length - 1)];
-    questionText = "What is the expansion for [ " + formulaName + " ]?";
-    currentCorrectAnswer = correctGroup.expansion;
-    options.push(currentCorrectAnswer);
+            } else if (currentQuizType === 'trig') {
+                let correctSetIdx = trigIndicesOrder[currentQuestionIdx];
+                let correctGroup = trigPool[correctSetIdx];
+                
+                let formulaName = correctGroup.formulas[getRandomInt(0, correctGroup.formulas.length - 1)];
+                questionText = "What is the expansion for [ " + formulaName + " ]?";
+                currentCorrectAnswer = correctGroup.expansion;
+                options.push(currentCorrectAnswer);
 
-    let structuralPool = [];
-    for (let i = 0; i < trigPool.length; i++) {
-        if (i !== correctSetIdx) {
-            structuralPool.push(trigPool[i]);
-        }
-    }
-    shuffleArray(structuralPool);
+                let structuralPool = [];
+                for (let i = 0; i < trigPool.length; i++) {
+                    if (i !== correctSetIdx) {
+                        structuralPool.push(trigPool[i]);
+                    }
+                }
+                shuffleArray(structuralPool);
 
-    // Pull 3 wrong answers from the other trig formulas
-    for (let i = 0; i < 3; i++) {
-        options.push(structuralPool[i].expansion);
-    }
-}
-
+                for (let i = 0; i < 3; i++) {
+                    options.push(structuralPool[i].expansion);
+                }
             }
 
             shuffleArray(options);
