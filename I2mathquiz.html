@@ -243,11 +243,10 @@
 
         // --- TRIG --- 
         const trigPool = [
-            
-            { expansion: "cos(x)cos(y) + sin(x)sin(y)", formulas: ["cos(x - y)"] },
-            { expansion: "cos(x)cos(y) - sin(x)sin(y)", formulas: ["cos(x + y)"] },
-            { expansion: "sin(x)cos(y) + cos(x)sin(y)", formulas: ["sin(x + y)"] },
-            { expansion: "sin(x)cos(y) - cos(x)sin(y)", formulas: ["sin(x - y)"] },
+            { expansion: "cos(x - y)", formulas: ["cos(x)cos(y) + sin(x)sin(y)"] },
+            { expansion: "cos(x + y)", formulas: ["cos(x)cos(y) - sin(x)sin(y)"] },
+            { expansion: "sin(x + y)", formulas: ["sin(x)cos(y) + cos(x)sin(y)"] },
+            { expansion: "sin(x - y)", formulas: ["sin(x)cos(y) - cos(x)sin(y)"] },
             { expansion: "sin(x)", formulas: ["cos(π/2 - x)", "sin(2π + x)"] },
             { expansion: "cos(x)", formulas: ["sin(π/2 - x)", "cos(2π - x)", "cos(2π + x)"] },
             { expansion: "-sin(x)", formulas: ["cos(π/2 + x)", "sin(π + x)", "sin(2π - x)"] },
